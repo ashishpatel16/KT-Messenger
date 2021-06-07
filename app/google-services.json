@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1035617508383",
+    "project_id": "ktmessenger-daf3e",
+    "storage_bucket": "ktmessenger-daf3e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1035617508383:android:39970956c80983f131892a",
+        "android_client_info": {
+          "package_name": "com.ashish.messenger"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1035617508383-i47asgio6soo1e43uek3fphjnf2mj5o5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB8qqP22TWfMiUSvyt4FjcAaivfjKlQ6Ds"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1035617508383-i47asgio6soo1e43uek3fphjnf2mj5o5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
