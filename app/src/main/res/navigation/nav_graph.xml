@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.ashish.messenger.ui.LoginFragment"
-        android:label="fragment_login"
+        android:label="Login"
         tools:layout="@layout/fragment_login" >
         <action
             android:id="@+id/action_loginFragment_to_profileFragment"
@@ -25,7 +25,7 @@
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.ashish.messenger.ui.ProfileFragment"
-        android:label="fragment_profile"
+        android:label="Profile"
         tools:layout="@layout/fragment_profile" >
         <action
             android:id="@+id/action_profileFragment_to_chatsFragment"
@@ -37,7 +37,7 @@
     <fragment
         android:id="@+id/chatsFragment"
         android:name="com.ashish.messenger.ui.ChatsFragment"
-        android:label="fragment_chats"
+        android:label="Chats"
         tools:layout="@layout/fragment_chats" >
         <action
             android:id="@+id/action_chatsFragment_to_chatFragment"
@@ -46,6 +46,6 @@
     <fragment
         android:id="@+id/chatFragment"
         android:name="com.ashish.messenger.ui.ChatFragment"
-        android:label="fragment_chat"
+        android:label="Chat Fragment"
         tools:layout="@layout/fragment_chat" />
 </navigation>
