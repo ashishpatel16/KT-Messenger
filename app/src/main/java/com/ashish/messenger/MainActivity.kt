@@ -2,6 +2,8 @@ package com.ashish.messenger
 
 import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
+import android.graphics.Color
+import android.graphics.ColorFilter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -18,6 +20,8 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.*
 import com.ashish.messenger.databinding.ActivityMainBinding
+import com.bumptech.glide.Glide
+import com.google.android.material.imageview.ShapeableImageView
 import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.*
@@ -32,6 +36,8 @@ class MainActivity : AppCompatActivity() {
     private var user : FirebaseUser? = null
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var appBarConfiguration: AppBarConfiguration
+    private lateinit var listener: NavController.OnDestinationChangedListener
+    val url = "https://firebasestorage.googleapis.com/v0/b/ktmessenger-daf3e.appspot.com/o/profile_pictures%2Fa67837b5-01b9-44fb-87f2-793c5dfa84a5.png?alt=media&token=28625b9e-a40f-4efa-bfce-c70e4172f064"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,11 +47,21 @@ class MainActivity : AppCompatActivity() {
         navController = this.findNavController(R.id.nav_host_fragment)
 
 
-        appBarConfiguration = AppBarConfiguration(setOf(R.id.loginFragment,R.id.chatsFragment),drawerLayout)
+        appBarConfiguration = AppBarConfiguration(navController.graph,drawerLayout)
         val toolbar = binding.toolbar
+        toolbar.setTitleTextColor(Color.WHITE)
         setSupportActionBar(toolbar)
+
         setupActionBarWithNavController(navController, appBarConfiguration)
         binding.navView.setupWithNavController(navController)
+
+        listener = NavController.OnDestinationChangedListener { controller, destination, arguments ->
+            if(destination.id == R.id.loginFragment) {
+                Log.i(TAG, "onCreate: Logging Out")
+                controller.graph.startDestination = R.id.loginFragment
+                Firebase.auth.signOut()
+            }
+        }
 
 
     }
@@ -66,6 +82,7 @@ class MainActivity : AppCompatActivity() {
             super.onBackPressed()
         }
     }
+
 
     companion object{
         const val TAG = "MainActivity"

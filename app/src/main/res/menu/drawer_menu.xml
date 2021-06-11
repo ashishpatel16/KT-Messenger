@@ -2,16 +2,24 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
-        <item android:id="@+id/nav_contacts"
-            android:title="Contacts" />
+        <item android:id="@+id/contactsFragment"
+            android:title="Contacts"
+            android:icon="@drawable/ic_contact" />
 
-        <item android:id="@+id/nav_start_conversation"
-            android:title="Start a Conversation" />
+        <item android:id="@+id/chatsFragment"
+            android:title="Chats"
+            android:icon="@drawable/ic_chat"/>
 
         <item android:id="@+id/nav_invite"
-            android:title="Invite" />
+            android:title="Invite"
+            android:icon="@drawable/ic_share"/>
 
-        <item android:id="@+id/nav_logout"
-            android:title="Logout" />
+        <item android:id="@+id/profileFragment"
+            android:title="Settings"
+            android:icon="@drawable/ic_baseline_settings_24"/>
+
+        <item android:id="@+id/loginFragment"
+            android:title="Logout"
+            android:icon="@drawable/ic_logout"/>
     </group>
 </menu>

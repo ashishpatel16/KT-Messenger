@@ -42,10 +42,26 @@
         <action
             android:id="@+id/action_chatsFragment_to_chatFragment"
             app:destination="@id/chatFragment" />
+        <action
+            android:id="@+id/action_chatsFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_chatsFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_chatsFragment_to_contactsFragment"
+            app:destination="@id/contactsFragment" />
     </fragment>
     <fragment
         android:id="@+id/chatFragment"
         android:name="com.ashish.messenger.ui.ChatFragment"
         android:label="Chat Fragment"
         tools:layout="@layout/fragment_chat" />
+    <fragment
+        android:id="@+id/contactsFragment"
+        android:name="com.ashish.messenger.ui.ContactsFragment"
+        android:label="All Contacts"
+        tools:layout="@layout/fragment_contacts" />
 </navigation>

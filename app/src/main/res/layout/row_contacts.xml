@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="75dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout_contact">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/contact_name"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_marginTop="12dp"
+        android:fontFamily="sans-serif-medium"
+        android:text="Ashish Patel"
+        android:layout_marginStart="20dp"
+        android:textColor="@color/purple_700"
+        android:textSize="20dp"
+        app:layout_constraintStart_toEndOf="@+id/display_picture"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/contact_phone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-medium"
+        android:text="8319520553"
+        android:textColor="@color/purple_200"
+        android:textSize="12dp"
+        app:layout_constraintStart_toStartOf="@+id/contact_name"
+        app:layout_constraintTop_toBottomOf="@+id/contact_name" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/display_picture"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:src="@drawable/ic_contact"
+        android:scaleType="centerCrop"
+        app:shapeAppearance="@style/circleImageView"
+        android:layout_marginStart="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

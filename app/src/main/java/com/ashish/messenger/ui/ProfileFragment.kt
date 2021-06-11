@@ -77,6 +77,7 @@ class ProfileFragment : Fragment() {
             openGalleryIntent.action = Intent.ACTION_GET_CONTENT
             startActivityForResult(Intent.createChooser(openGalleryIntent, "Select Picture"),
                 PICK_IMAGE)
+            binding.btnSaveProfile.isEnabled = false
         }
 
         return  binding.root
@@ -130,6 +131,7 @@ class ProfileFragment : Fragment() {
                 dpRef.downloadUrl.addOnCompleteListener{
                     val downloadUri = it.result.toString()
                     uploadedPictureUrl = downloadUri
+                    binding.btnSaveProfile.isEnabled = true
                     Log.i(TAG, "uploadProfilePicture: $uploadedPictureUrl")
             }
         }.addOnFailureListener{

@@ -32,28 +32,39 @@ class LoginFragment : Fragment() {
     private lateinit var binding: FragmentLoginBinding
     lateinit var navController: NavController
     private var storedVerificationId: String? = ""
-    lateinit var callbacks : PhoneAuthProvider.OnVerificationStateChangedCallbacks
+    lateinit var callbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks
     private lateinit var resendToken: PhoneAuthProvider.ForceResendingToken
     private lateinit var contextView: View
     private lateinit var btn: MaterialButton
     private lateinit var codeInputText: TextInputEditText
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle? ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         // Primary Initializations
         binding = DataBindingUtil.inflate<FragmentLoginBinding>(inflater, R.layout.fragment_login, container, false)
         btn = binding.btnSubmit
         codeInputText = binding.editTextCode
         auth = Firebase.auth
         contextView = requireActivity().findViewById<View>(android.R.id.content)
+
         navController = findNavController()
+        Log.i(TAG, "onCreateView: ${navController.graph.startDestination}")
         navController.graph.startDestination = R.id.chatsFragment
+        Log.i(TAG, "onCreateView: Came Back")
+        if (auth.currentUser != null) {
+            Snackbar.make(contextView, "Welcome Back, Captain!", Snackbar.LENGTH_LONG)
+                    .setBackgroundTint(resources.getColor(R.color.purple_200))
+                    .setTextColor(resources.getColor(R.color.purple_700))
+                    .show()
+            Log.i(TAG, "onCreateView: ${auth.currentUser!!.phoneNumber.toString()}")
+            navigateToNextFragment(R.id.action_loginFragment_to_chatsFragment)
+        }
 
 
         (requireActivity() as AppCompatActivity).supportActionBar?.hide() // Keeping the action bar hidden for login screen
-        binding.btnSubmit.setOnClickListener{
+        binding.btnSubmit.setOnClickListener {
             val phone = binding.editTextPhone.text.toString()
-            if(phone.length == 10) {
-                Snackbar.make(contextView,"Invalid Phone Number. Please retry.",Snackbar.LENGTH_SHORT).show()
+            if (phone.length == 10) {
+                Snackbar.make(contextView, "Invalid Phone Number. Please retry.", Snackbar.LENGTH_SHORT).show()
             }
             codeInputText.visibility = View.VISIBLE
             createAccount("+91$phone")
@@ -66,57 +77,50 @@ class LoginFragment : Fragment() {
         super.onStart()
         // Check if user is signed in (non-null) and update UI accordingly.
         val currentUser = auth.currentUser
-        if(currentUser != null){
-            Snackbar.make(contextView,"Welcome Back, Captain!",Snackbar.LENGTH_LONG)
-                .setBackgroundTint(resources.getColor(R.color.purple_200))
-                .setTextColor(resources.getColor(R.color.purple_700))
-                .show()
-            navigateToNextFragment(R.id.action_loginFragment_to_chatsFragment)
-        }
 
-        callbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+            callbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
-            override fun onVerificationCompleted(credential: PhoneAuthCredential) {
-                Log.d(TAG, "onVerificationCompleted:$credential")
-                signInWithPhoneAuthCredential(credential)
-            }
-
-            override fun onVerificationFailed(e: FirebaseException) {
-                Log.w(TAG, "onVerificationFailed", e)
-
-                if (e is FirebaseAuthInvalidCredentialsException) {
-                    // Invalid request
-                } else if (e is FirebaseTooManyRequestsException) {
-                    // The SMS quota for the project has been exceeded
+                override fun onVerificationCompleted(credential: PhoneAuthCredential) {
+                    Log.d(TAG, "onVerificationCompleted:$credential")
+                    signInWithPhoneAuthCredential(credential)
                 }
-                Snackbar.make(contextView,"Something went wrong!",Snackbar.LENGTH_LONG)
-                    .setBackgroundTint(resources.getColor(R.color.design_default_color_error))
-                    .show()
 
+                override fun onVerificationFailed(e: FirebaseException) {
+                    Log.w(TAG, "onVerificationFailed", e)
+
+                    if (e is FirebaseAuthInvalidCredentialsException) {
+                        // Invalid request
+                    } else if (e is FirebaseTooManyRequestsException) {
+                        // The SMS quota for the project has been exceeded
+                    }
+                    Snackbar.make(contextView, "Something went wrong!", Snackbar.LENGTH_LONG)
+                            .setBackgroundTint(resources.getColor(R.color.design_default_color_error))
+                            .show()
+
+                }
+
+                override fun onCodeSent(
+                        verificationId: String,
+                        token: PhoneAuthProvider.ForceResendingToken
+                ) {
+                    // The SMS verification code has been sent to the provided phone number, we
+                    // now need to ask the user to enter the code and then construct a credential
+                    // by combining the code with a verification ID.
+                    Log.d(TAG, "onCodeSent:$verificationId")
+
+                    // Save verification ID and resending token so we can use them later
+                    val storedVerificationId = verificationId
+                    val resendToken = token
+
+                }
+
+                override fun onCodeAutoRetrievalTimeOut(p0: String) {
+                    super.onCodeAutoRetrievalTimeOut(p0)
+                    Snackbar.make(contextView, "Request Timed out. Try again.", Snackbar.LENGTH_LONG)
+                            .setBackgroundTint(resources.getColor(R.color.design_default_color_error))
+                            .show()
+                }
             }
-
-            override fun onCodeSent(
-                verificationId: String,
-                token: PhoneAuthProvider.ForceResendingToken
-            ) {
-                // The SMS verification code has been sent to the provided phone number, we
-                // now need to ask the user to enter the code and then construct a credential
-                // by combining the code with a verification ID.
-                Log.d(TAG, "onCodeSent:$verificationId")
-
-                // Save verification ID and resending token so we can use them later
-                val storedVerificationId = verificationId
-                val resendToken = token
-
-            }
-
-            override fun onCodeAutoRetrievalTimeOut(p0: String) {
-                super.onCodeAutoRetrievalTimeOut(p0)
-                Snackbar.make(contextView,"Request Timed out. Try again.",Snackbar.LENGTH_LONG)
-                    .setBackgroundTint(resources.getColor(R.color.design_default_color_error))
-                    .show()
-            }
-        }
     }
 
     private fun createAccount(phoneNumber:String) {
@@ -145,6 +149,7 @@ class LoginFragment : Fragment() {
                         Snackbar.make(contextView,"Hooray! Login Successful.",Snackbar.LENGTH_SHORT)
                                 .setBackgroundTint(resources.getColor(R.color.teal_200))
                                 .show()
+                        navigateToNextFragment(R.id.action_loginFragment_to_profileFragment)
                     } else {
                         // Sign in failed, display a message and update the UI
                         Log.w(TAG, "signInWithCredential:failure", task.exception)
