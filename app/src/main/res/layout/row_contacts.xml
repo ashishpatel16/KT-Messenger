@@ -12,7 +12,7 @@
         android:layout_height="30dp"
         android:layout_marginTop="12dp"
         android:fontFamily="sans-serif-medium"
-        android:text="Ashish Patel"
+        tools:text="Ashish Patel"
         android:layout_marginStart="20dp"
         android:textColor="@color/purple_700"
         android:textSize="20dp"
@@ -20,13 +20,16 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/contact_phone"
+        android:id="@+id/contact_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:ellipsize="end"
         android:fontFamily="sans-serif-medium"
-        android:text="8319520553"
+        android:singleLine="true"
+        tools:text="8319520553sdafsfsdfsdfsaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        android:maxWidth="310dp"
         android:textColor="@color/purple_200"
-        android:textSize="12dp"
+        android:textSize="16dp"
         app:layout_constraintStart_toStartOf="@+id/contact_name"
         app:layout_constraintTop_toBottomOf="@+id/contact_name" />
 

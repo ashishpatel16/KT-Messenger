@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:padding="8dp"
+    android:layout_marginTop="4dp">
+
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/chat_receiver_picture"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/chat_icon_bordered"
+        android:scaleType="centerCrop"
+        android:layout_marginLeft="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearance="@style/circleImageView"
+        tools:src="@color/purple_700" />
+
+    <TextView
+        android:id="@+id/chat_receiver_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/message_receiver_rounded"
+        android:elevation="6dp"
+        android:fontFamily="sans-serif"
+        android:maxWidth="300dp"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="12dp"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/chat_receiver_picture"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Hey there whatsup my brother bonjour!" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

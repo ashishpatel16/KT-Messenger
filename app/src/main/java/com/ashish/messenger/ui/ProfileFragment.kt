@@ -92,7 +92,7 @@ class ProfileFragment : Fragment() {
     }
 
     private fun saveProfile(phone: String, status: String, name: String) {
-        val user = User(name,phone,uploadedPictureUrl,status)
+        val user = User(name,phone,uploadedPictureUrl,status,)
         val db = Firebase.firestore
         db.collection("users")
                 .document(mUserId)

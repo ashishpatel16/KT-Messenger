@@ -63,5 +63,10 @@
         android:id="@+id/contactsFragment"
         android:name="com.ashish.messenger.ui.ContactsFragment"
         android:label="All Contacts"
-        tools:layout="@layout/fragment_contacts" />
+        tools:layout="@layout/fragment_contacts" >
+        <action
+            android:id="@+id/action_contactsFragment_to_chatFragment"
+            app:destination="@id/chatFragment"
+            app:popUpTo="@id/contactsFragment" />
+    </fragment>
 </navigation>

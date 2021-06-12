@@ -1,6 +1,7 @@
-package com.ashish.messenger.ui
+package com.ashish.messenger.adapter
 
 import android.content.Context
+import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -8,8 +9,10 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.ashish.messenger.R
+import com.ashish.messenger.ui.Contact
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
@@ -21,23 +24,15 @@ class ContactsAdapter (private val dataSet: MutableList<Contact>, context: Conte
     val mContext = context
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val textView_name: MaterialTextView
-        val textView_phone: MaterialTextView
-        val img : ImageView
-        val layout: ConstraintLayout
+        val textView_name: MaterialTextView = view.findViewById(R.id.contact_name)
+        val textView_status: MaterialTextView = view.findViewById(R.id.contact_status)
+        val img : ImageView = view.findViewById(R.id.display_picture)
+        val layout: ConstraintLayout = view.findViewById(R.id.layout_contact)
 
         init {
             // Define click listener for the ViewHolder's View.
-            textView_name = view.findViewById(R.id.contact_name)
-            textView_phone = view.findViewById(R.id.contact_phone)
-            img = view.findViewById(R.id.display_picture)
-            layout = view.findViewById(R.id.layout_contact)
-            layout.setOnClickListener{
-                Toast.makeText(view.context,
-                        "${textView_name.text.toString()}",
-                        Toast.LENGTH_SHORT)
-                        .show()
-            }
+
+
         }
     }
 
@@ -60,7 +55,7 @@ class ContactsAdapter (private val dataSet: MutableList<Contact>, context: Conte
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
         viewHolder.textView_name.text = dataSet[position].name
-        viewHolder.textView_phone.text = dataSet[position].phone
+        viewHolder.textView_status.text = dataSet[position].status
         Log.i("DP STATUS", "onBindViewHolder: ${dataSet[position].dp}")
 
 
@@ -71,6 +66,20 @@ class ContactsAdapter (private val dataSet: MutableList<Contact>, context: Conte
                 .error(R.drawable.ic_contact)
                 .placeholder(R.drawable.ic_contact)
                 .into(viewHolder.img)
+
+        viewHolder.layout.setOnClickListener{
+            Toast.makeText(mContext,
+                "${viewHolder.textView_name.text.toString()}",
+                Toast.LENGTH_SHORT)
+                .show()
+            var bundle = Bundle()
+            bundle.putString("contactId",dataSet[position].contactId)
+
+            viewHolder.itemView.findNavController()
+                    .navigate(R.id.action_contactsFragment_to_chatFragment,bundle)
+            Log.i("ContactsAdapter", "onBindViewHolder: passed String: ${dataSet[position].contactId}")
+
+        }
 
     }
 
