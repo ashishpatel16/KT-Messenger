@@ -13,9 +13,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.ashish.messenger.R
+import com.ashish.messenger.Utils.getCurrentTime
 import com.ashish.messenger.data.User
 import com.ashish.messenger.databinding.FragmentProfileBinding
-import com.bumptech.glide.Glide
 import com.bumptech.glide.Glide.*
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseUser
@@ -92,7 +92,7 @@ class ProfileFragment : Fragment() {
     }
 
     private fun saveProfile(phone: String, status: String, name: String) {
-        val user = User(name,phone,uploadedPictureUrl,status,)
+        val user = User(name,phone,uploadedPictureUrl,status, getCurrentTime(),"",true)
         val db = Firebase.firestore
         db.collection("users")
                 .document(mUserId)

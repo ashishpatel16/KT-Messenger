@@ -14,11 +14,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ashish.messenger.R
 import com.ashish.messenger.adapter.ContactsAdapter
+import com.ashish.messenger.data.User
 import com.ashish.messenger.databinding.FragmentContactsBinding
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.firestore.ktx.firestoreSettings
 import com.google.firebase.ktx.Firebase
 
 
@@ -27,7 +27,8 @@ data class Contact(val name: String, val phone: String, var dp: String ="", var 
 class ContactsFragment : Fragment() {
     private lateinit var binding: FragmentContactsBinding
     private lateinit var localContactsList: MutableList<Contact>
-    private lateinit var firebaseContactsList: MutableList<Contact>
+    private lateinit var firebaseContactsList: MutableList<User>
+    private lateinit var firebaseContactIds : MutableList<String>
     private lateinit var cursor: Cursor
     private lateinit var phoneHashSet: MutableSet<String>
     private lateinit var recyclerView : RecyclerView
@@ -41,12 +42,8 @@ class ContactsFragment : Fragment() {
         binding = DataBindingUtil.inflate<FragmentContactsBinding>(inflater, R.layout.fragment_contacts, container, false)
         phoneHashSet = mutableSetOf<String>()
         localContactsList = mutableListOf()
+        firebaseContactIds = mutableListOf()
         firebaseContactsList = mutableListOf()
-
-        val settings = firestoreSettings {
-            isPersistenceEnabled = true
-        }
-        Firebase.firestore.firestoreSettings = settings
 
         recyclerView = binding.recyclerView
         requestPermissions(arrayOf(Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS), 1)
@@ -58,29 +55,22 @@ class ContactsFragment : Fragment() {
                 null,
                 null
         )!!
-        
 
         fetchContacts()
-        snackBar("Found ${phoneHashSet.size} contacts!")
-
-
-
         return binding.root
     }
 
-    private fun initRecyclerView(mList: MutableList<Contact>) {
-
+    private fun initRecyclerView(mContactList: MutableList<User>, mContactIdList: MutableList<String>) {
+        // Initialize recycler view with existing firebase contacts
         recyclerView.apply {
             setHasFixedSize(false)
             layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL,false)
-            adapter = ContactsAdapter(mList,context)
+            adapter = ContactsAdapter(mContactList,mContactIdList,context)
         }
         Log.i(TAG, "initRecyclerView: Init rec view done!")
-        snackBar("Found ${firebaseContactsList.size} contacts!")
     }
 
-    private fun test() {
-        val mList = mutableListOf<Contact>()
+    private fun fetchFirebaseUsers() {
         for(contact in localContactsList) {
             val docRef = Firebase.firestore.collection("users")
                 .whereEqualTo("phone",contact.phone)
@@ -88,18 +78,26 @@ class ContactsFragment : Fragment() {
                 .addOnSuccessListener {
                     if(!it.isEmpty) {
                         val obj = it.documents[0]
-                        contact.dp = obj["profilePictureUrl"].toString()
-                        contact.status = obj["status"].toString()
-                        contact.contactId = obj.id.toString()
-                        mList.add(contact)
+                        val isActive : Boolean = obj["isOnline"] != null
+                        val firebaseUser = User(contact.name,
+                                contact.phone,
+                                obj["profilePictureUrl"].toString(),
+                                obj["status"].toString(),
+                                obj["dateJoined"].toString(),
+                                obj["lastSeen"].toString(),
+                                isActive
+                        )
+
+                        firebaseContactIds.add(obj.id.toString())
+                        firebaseContactsList.add(firebaseUser)
 
                         recyclerView.adapter?.notifyDataSetChanged()
                         Log.i(TAG, "test: Found User id : ${obj.id}")
                     }
                 }
         }
-        initRecyclerView(mList)
-        Log.i(TAG, "test: Finally found ${mList.size} Contacts in list")
+        initRecyclerView(firebaseContactsList, firebaseContactIds)
+        Log.i(TAG, "test: Finally found ${firebaseContactsList.size} Contacts in list")
     }
 
     private fun fetchContacts() {
@@ -117,30 +115,8 @@ class ContactsFragment : Fragment() {
                 }
             }
         }
-
-        test()
+        fetchFirebaseUsers()
     }
-
-//    private fun findFirebaseUsers() {
-//        val docRef = Firebase.firestore.collection("users")
-//                .get()
-//                .addOnSuccessListener {
-//                    for(user in it) {
-//                        val ph = user.data["phone"].toString()
-//                        if(phoneHashSet.contains(ph)){
-//                            for(contact in localContactsList) {
-//                                if(contact.phone == ph) {
-//                                    firebaseContactsList.add(contact)
-//                                    Log.i(TAG, "findFirebaseUsers: Found ${contact.phone}")
-//                                }
-//                            }
-//                        }
-//                    }
-//                }.addOnFailureListener {
-//                    Log.d(TAG, "findFirebaseUsers: Failed to load firebase contacts.")
-//                    snackBar("Failed to Load Contacts. Please try again in sometime.")
-//                }
-//    }
     
     private fun snackBar(text: String) {
         Snackbar.make(
@@ -153,8 +129,6 @@ class ContactsFragment : Fragment() {
     private fun openConversation() {
 
     }
-
-
 
     companion object{
         const val TAG = "ContactsFragment"

@@ -22,6 +22,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import java.util.*
 import com.ashish.messenger.Utils.getCurrentTime
+import com.ashish.messenger.data.Message
 
 class ChatFragment : Fragment() {
 
@@ -112,31 +113,7 @@ class ChatFragment : Fragment() {
     private fun populateList():MutableList<Message> {
         val mList = mutableListOf<Message>()
         val url = "https://firebasestorage.googleapis.com/v0/b/ktmessenger-daf3e.appspot.com/o/profile_pictures%2F4d20319a-b31f-41e7-b196-8e9ee1672fa0.png?alt=media&token=ac88608a-c9b1-4e33-9c9d-3022e43a317b"
-        mList.add(Message(url,"Hello World! This is a nice app!!!"))
-        mList.add(Message(url,"Hello World! This is a nice app!!!",isSender = false))
-        mList.add(Message(url,"Hello World! This is a nice app!!!",isSender = false))
-        mList.add(Message(url,"Hello World! This is a nice app!!!",isSender = false))
-        mList.add(Message(url,"Hello World! This is a nice app!!!",isSender = false))
-        mList.add(Message(url,"Hello World! This is a nice app!!!"))
-        mList.add(Message(url,"Hello World! This is a nice app!!!",isSender = false))
-        mList.add(Message(url,"Hello World! This is a nice app!!!"))
-        mList.add(Message(url,"Hello World! This is a nice app!!!",isSender = false))
-        mList.add(Message(url,"Hello World! This is a nice app!!!"))
-        mList.add(Message(url,"Hello World! This is a nice app!!!",isSender = false))
-        mList.add(Message(url,"Hello World! This is a nice app!!!"))
-        mList.add(Message(url,"Hello World! This is a nice app!!!",isSender = false))
-        mList.add(Message(url,"Hello World! This is a nice app!!!"))
-        mList.add(Message(url,"Hello World! This is a nice app!!!",isSender = false))
-        mList.add(Message(url,"Hello World! This is a nice app!!!"))
-        mList.add(Message(url,"Hello World! This is a nice app!!!",isSender = false))
-        mList.add(Message(url,"Hello World! This is a nice app!!!"))
-        mList.add(Message(url,"Hello World! This is a nice app!!!",isSender = false))
-        mList.add(Message(url,"Hello World! This is a nice app!!!",isSender = false))
-        mList.add(Message(url,"Hello World! This is a nice app!!!"))
-        mList.add(Message(url,"Hello World! This is a nice app!!!",isSender = false))
-        mList.add(Message(url,"Hello World! This is a nice app!!!"))
-        mList.add(Message(url,"Hello World! This is a nice app!!!",isSender = false))
-        mList.add(Message(url,"Hello World! This is a nice app!!!"))
+
         initRecyclerView(mList)
         return mList
     }

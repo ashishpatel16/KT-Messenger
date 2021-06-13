@@ -13,13 +13,10 @@ import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.ashish.messenger.R
-import com.ashish.messenger.ui.Contact
-import com.ashish.messenger.ui.Message
+import com.ashish.messenger.Utils.getUId
+import com.ashish.messenger.data.Message
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.imageview.ShapeableImageView
-import com.google.android.material.textview.MaterialTextView
 
 class ChatAdapter (private val dataSet: MutableList<Message>, context: Context) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -52,7 +49,7 @@ class ChatAdapter (private val dataSet: MutableList<Message>, context: Context) 
 
 
     override fun getItemViewType(position: Int): Int {
-        return if(dataSet[position].isSender) 0
+        return if(dataSet[position].author == getUId()) 0
         else 1
     }
 
@@ -70,22 +67,22 @@ class ChatAdapter (private val dataSet: MutableList<Message>, context: Context) 
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if(dataSet[position].isSender) {
+        if(dataSet[position].author == getUId()) {
             val vh = holder as ViewHolderSender
             holder.senderText.text = dataSet[position].text
-            Glide.with(mContext)
-                .load(dataSet[position].id)
-                .error(R.drawable.ic_contact)
-                .placeholder(R.drawable.ic_contact)
-                .into(holder.senderIcon)
+//            Glide.with(mContext)
+//                .load(dataSet[position].)
+//                .error(R.drawable.ic_contact)
+//                .placeholder(R.drawable.ic_contact)
+//                .into(holder.senderIcon)
         }else {
             val vh = holder as ViewHolderReceiver
             holder.receiverText.text = dataSet[position].text
-            Glide.with(mContext)
-                .load(dataSet[position].id)
-                .error(R.drawable.ic_contact)
-                .placeholder(R.drawable.ic_contact)
-                .into(holder.receiverIcon)
+//            Glide.with(mContext)
+//                .load(dataSet[position].id)
+//                .error(R.drawable.ic_contact)
+//                .placeholder(R.drawable.ic_contact)
+//                .into(holder.receiverIcon)
         }
     }
 

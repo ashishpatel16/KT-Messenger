@@ -6,11 +6,11 @@
             android:title="Contacts"
             android:icon="@drawable/ic_contact" />
 
-        <item android:id="@+id/chatFragment"
+        <item android:id="@+id/chatsFragment"
             android:title="Chats"
             android:icon="@drawable/ic_chat"/>
 
-        <item android:id="@+id/nav_invite"
+        <item android:id="@+id/chatFragment"
             android:title="Invite"
             android:icon="@drawable/ic_share"/>
 
