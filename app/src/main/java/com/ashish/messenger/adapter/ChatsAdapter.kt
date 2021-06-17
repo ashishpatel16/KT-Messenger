@@ -10,6 +10,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.get
 import androidx.recyclerview.widget.RecyclerView
 import com.ashish.messenger.R
 import com.ashish.messenger.data.Conversation
@@ -47,6 +49,9 @@ class ChatsAdapter (private val dataSet: MutableList<ChatObject>, private val co
         holder.layout.setOnClickListener{
             val bundle = Bundle()
             bundle.putString("conversationId",dataSet[position].conversationId)
+            bundle.putString("contactName",dataSet[position].name.toString())
+            holder.itemView.findNavController().graph[R.id.chatFragment].label = dataSet[position].name.toString()
+            bundle.putString("previousDestination",holder.itemView.findNavController().currentDestination?.id.toString())
             holder.itemView.findNavController().navigate(R.id.action_chatsFragment_to_chatFragment,bundle)
         }
 

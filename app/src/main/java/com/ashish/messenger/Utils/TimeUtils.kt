@@ -12,3 +12,9 @@ fun getCurrentTime(): String {
     return currentDate.toString()
 }
 
+fun getTimeId(): String {
+    val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSS")
+    val currentDate = sdf.format(Date())
+    return currentDate.toString()
+}
+

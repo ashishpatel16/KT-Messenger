@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.findNavController
+import androidx.navigation.get
 import androidx.recyclerview.widget.RecyclerView
 import com.ashish.messenger.R
 import com.ashish.messenger.data.User
@@ -59,7 +60,8 @@ class ContactsAdapter (private val dataSet: MutableList<User>,private val UserId
         viewHolder.layout.setOnClickListener{
             val bundle = Bundle()
             bundle.putString("contactId",UserIds[position])
-
+            bundle.putString("previousDestination",viewHolder.itemView.findNavController().currentDestination?.id.toString())
+            viewHolder.itemView.findNavController().graph[R.id.chatFragment].label = dataSet[position].name
             viewHolder.itemView.findNavController()
                     .navigate(R.id.action_contactsFragment_to_chatFragment,bundle)
             Log.i("ContactsAdapter", "onBindViewHolder: passed String: ${UserIds[position]}")

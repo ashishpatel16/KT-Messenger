@@ -1,30 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="230dp"
-    android:background="@color/purple_700"
-    android:orientation="vertical"
+    android:layout_height="270dp"
     android:gravity="bottom"
-    android:padding="16dp">
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@drawable/nav_drawable"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark"
+    android:outlineSpotShadowColor="@color/purple_500"
+    android:layout_marginBottom="12dp"
+    android:elevation="8dp">
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/imageprofile_picture"
-        android:layout_width="90dp"
-        android:layout_height="90dp"
-        android:elevation="4dp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
         android:scaleType="centerCrop"
         android:layout_gravity="center_horizontal"
         android:src="@mipmap/ic_launcher"
-         />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginBottom="8dp"
+        app:shapeAppearance="@style/circleImageView" />
 
     <TextView
-        android:id="@+id/textview_username"
-        android:layout_width="wrap_content"
-        android:layout_height="25dp"
-        android:textColor="@color/white"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="8dp"
-        android:text="Ashish"
-        />
+        android:id="@+id/textView_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="4dp"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:fontFamily="sans-serif"
+        app:layout_constraintStart_toStartOf="@+id/imageprofile_picture"
+        app:layout_constraintTop_toBottomOf="@+id/imageprofile_picture" />
+
+    <TextView
+        android:id="@+id/textView_status"
+        android:layout_width="match_parent"
+        android:gravity="center_horizontal"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:fontFamily="sans-serif"
+        android:text="TextView"
+        android:textSize="12sp"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="@+id/textView_name"
+        app:layout_constraintTop_toBottomOf="@+id/textView_name" />
+
 
 </LinearLayout>

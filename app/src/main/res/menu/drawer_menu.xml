@@ -10,8 +10,8 @@
             android:title="Chats"
             android:icon="@drawable/ic_chat"/>
 
-        <item android:id="@+id/chatFragment"
-            android:title="Invite"
+        <item android:id="@+id/nav_share"
+            android:title="Share"
             android:icon="@drawable/ic_share"/>
 
         <item android:id="@+id/profileFragment"

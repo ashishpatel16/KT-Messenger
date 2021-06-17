@@ -40,21 +40,22 @@ class LoginFragment : Fragment() {
         // Primary Initializations
         binding = DataBindingUtil.inflate<FragmentLoginBinding>(inflater, R.layout.fragment_login, container, false)
         btn = binding.btnSubmit
+        (requireActivity() as AppCompatActivity).supportActionBar?.hide() // Keeping the action bar hidden for login screen
         codeInputText = binding.editTextCode
 
         contextView = requireActivity().findViewById<View>(android.R.id.content)
 
         navController = findNavController()
-        Log.i(TAG, "onCreateView: ${navController.graph.startDestination}")
+        Log.i(TAG, "onCreateView: Start Destination : ${navController.graph.startDestination}")
         navController.graph.startDestination = R.id.chatsFragment
-        Log.i(TAG, "onCreateView: Came Back")
+
         if (auth.currentUser != null) {
             Log.i(TAG, "onCreateView: ${auth.currentUser!!.phoneNumber.toString()}")
             navigateToNextFragment(R.id.action_loginFragment_to_chatsFragment)
         }
 
 
-        (requireActivity() as AppCompatActivity).supportActionBar?.hide() // Keeping the action bar hidden for login screen
+
         binding.btnSubmit.setOnClickListener {
             val phone = binding.editTextPhone.text.toString()
             if (phone.length != 10) {
@@ -70,6 +71,7 @@ class LoginFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         // Check if user is signed in (non-null) and update UI accordingly.
+
 
             callbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
@@ -89,6 +91,7 @@ class LoginFragment : Fragment() {
                     Snackbar.make(contextView, "Something went wrong!", Snackbar.LENGTH_LONG)
                             .setBackgroundTint(resources.getColor(R.color.design_default_color_error))
                             .show()
+                    Log.i(TAG, "onVerificationFailed: ${e.printStackTrace()}")
 
                 }
 
@@ -98,10 +101,10 @@ class LoginFragment : Fragment() {
                 ) {
                     Log.d(TAG, "onCodeSent:$verificationId")
 
+
                     // No Use as of now
                     val storedVerificationId = verificationId
                     val resendToken = token
-
 
                 }
 

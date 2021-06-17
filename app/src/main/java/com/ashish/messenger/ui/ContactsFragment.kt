@@ -65,7 +65,7 @@ class ContactsFragment : Fragment() {
         recyclerView.apply {
             setHasFixedSize(false)
             layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL,false)
-            adapter = ContactsAdapter(mContactList,mContactIdList,context)
+            adapter = ContactsAdapter(mContactList,mContactIdList,context.applicationContext)
         }
         Log.i(TAG, "initRecyclerView: Init rec view done!")
     }

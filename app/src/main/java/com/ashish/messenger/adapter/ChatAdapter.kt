@@ -15,13 +15,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ashish.messenger.R
 import com.ashish.messenger.Utils.getUId
 import com.ashish.messenger.data.Message
+import com.ashish.messenger.ui.ChatFragment
 import com.bumptech.glide.Glide
 import com.google.android.material.imageview.ShapeableImageView
 
-class ChatAdapter (private val dataSet: MutableList<Message>, context: Context) :
+class ChatAdapter (private val dataSet: MutableList<Message>, private val context: Context,private val senderIcon:String,private val recipientIcon:String) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    val mDataset = dataSet
-    val mContext = context
 
     class ViewHolderSender(view: View) : RecyclerView.ViewHolder(view) {
         val senderIcon: ShapeableImageView
@@ -70,19 +69,19 @@ class ChatAdapter (private val dataSet: MutableList<Message>, context: Context) 
         if(dataSet[position].author == getUId()) {
             val vh = holder as ViewHolderSender
             holder.senderText.text = dataSet[position].text
-//            Glide.with(mContext)
-//                .load(dataSet[position].)
-//                .error(R.drawable.ic_contact)
-//                .placeholder(R.drawable.ic_contact)
-//                .into(holder.senderIcon)
+            Glide.with(context)
+                .load(senderIcon)
+                .error(R.drawable.ic_contact)
+                .placeholder(R.drawable.ic_contact)
+                .into(holder.senderIcon)
         }else {
             val vh = holder as ViewHolderReceiver
             holder.receiverText.text = dataSet[position].text
-//            Glide.with(mContext)
-//                .load(dataSet[position].id)
-//                .error(R.drawable.ic_contact)
-//                .placeholder(R.drawable.ic_contact)
-//                .into(holder.receiverIcon)
+            Glide.with(context)
+                .load(recipientIcon)
+                .error(R.drawable.ic_contact)
+                .placeholder(R.drawable.ic_contact)
+                .into(holder.receiverIcon)
         }
     }
 

@@ -30,7 +30,7 @@
         <action
             android:id="@+id/action_profileFragment_to_chatsFragment"
             app:destination="@id/chatsFragment"
-            app:popUpTo="@id/loginFragment"
+            app:popUpTo="@id/profileFragment"
             app:popUpToInclusive="true" />
     </fragment>
 
@@ -41,32 +41,36 @@
         tools:layout="@layout/fragment_chats" >
         <action
             android:id="@+id/action_chatsFragment_to_chatFragment"
-            app:destination="@id/chatFragment" />
+            app:destination="@id/chatFragment"
+            app:popUpTo="@id/chatsFragment" />
         <action
             android:id="@+id/action_chatsFragment_to_profileFragment"
-            app:destination="@id/profileFragment" />
+            app:destination="@id/profileFragment"
+            app:popUpTo="@id/chatsFragment"
+            app:popUpToInclusive="false" />
         <action
             android:id="@+id/action_chatsFragment_to_loginFragment"
             app:destination="@id/loginFragment"
             app:popUpTo="@id/loginFragment"
-            app:popUpToInclusive="false" />
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_chatsFragment_to_contactsFragment"
-            app:destination="@id/contactsFragment" />
+            app:destination="@id/contactsFragment"
+            app:popUpTo="@id/chatsFragment" />
     </fragment>
     <fragment
         android:id="@+id/chatFragment"
         android:name="com.ashish.messenger.ui.ChatFragment"
-        android:label="Chat Fragment"
         tools:layout="@layout/fragment_chat" />
     <fragment
         android:id="@+id/contactsFragment"
         android:name="com.ashish.messenger.ui.ContactsFragment"
-        android:label="All Contacts"
+        android:label="Contacts"
         tools:layout="@layout/fragment_contacts" >
         <action
             android:id="@+id/action_contactsFragment_to_chatFragment"
             app:destination="@id/chatFragment"
-            app:popUpTo="@id/contactsFragment" />
+            app:popUpTo="@id/contactsFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 </navigation>

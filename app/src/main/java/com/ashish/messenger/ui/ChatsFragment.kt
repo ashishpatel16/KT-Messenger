@@ -12,15 +12,13 @@ import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.ashish.messenger.MainActivity
 import com.ashish.messenger.R
+import com.ashish.messenger.Utils.getTimeId
 import com.ashish.messenger.adapter.ChatsAdapter
-import com.ashish.messenger.adapter.ContactsAdapter
 import com.ashish.messenger.data.*
 import com.ashish.messenger.databinding.FragmentChatsBinding
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers
@@ -49,13 +47,22 @@ class ChatsFragment : Fragment() {
             container,
             false)
         (requireActivity() as AppCompatActivity).supportActionBar?.show()
+        Log.i(ChatFragment.TAG, "onCreateView: title ${requireActivity().title}")
         mConversationList = mutableListOf()
         set = mutableSetOf()
+        Log.i(TAG, "onCreateView: ${getTimeId()}")
+        Log.i(TAG, "onCreateView: ${getTimeId()}")
+        Log.i(TAG, "onCreateView: ${getTimeId()}")
+        Log.i(TAG, "onCreateView: ${getTimeId()}")
 
         // mConversationList.add(ChatObject("Ashish","Hi there!",""))
         recyclerView = binding.chatsRecyclerView
         initRecyclerView()
         fetchConversations()
+
+        binding.fab.setOnClickListener{
+            findNavController().navigate(R.id.action_chatsFragment_to_contactsFragment)
+        }
 
         return binding.root
     }
@@ -65,7 +72,7 @@ class ChatsFragment : Fragment() {
         recyclerView.apply {
             setHasFixedSize(false)
             layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL,false)
-            adapter = ChatsAdapter(mConversationList,context)
+            adapter = ChatsAdapter(mConversationList,context.applicationContext)
         }
         Log.i(TAG, "initRecyclerView: Init rec view done!")
     }
@@ -83,12 +90,13 @@ class ChatsFragment : Fragment() {
                         Log.d(TAG, "Current data: ${snapshot.documents[0]["participant1"]}")
                         // If found in p1, p2 is the other recipient
                         for(chat in snapshot.documents) {
-                            addChatToList(chat)
+                            addChatToList(chat,"participant2")
                             Log.i(TAG, "fetchConversations: found in p1 with id: ${chat.id}")
                         }
                     } else {
                         Log.d(TAG, "Current data: null")
                     }
+
                 }
 
         db.collection("chats")
@@ -101,7 +109,7 @@ class ChatsFragment : Fragment() {
 
                     if (snapshot != null && !snapshot.isEmpty) {
                         for(chat in snapshot.documents) {
-                            addChatToList(chat)
+                            addChatToList(chat,"participant1")
                             Log.i(TAG, "fetchConversations: found in p2")
                         }
 
@@ -111,9 +119,9 @@ class ChatsFragment : Fragment() {
                 }
     }
 
-    private fun addChatToList(chat: DocumentSnapshot) {
+    private fun addChatToList(chat: DocumentSnapshot, id: String) {
         GlobalScope.launch(Dispatchers.IO) {
-            val id = chat["participant2"].toString()
+            val id = chat[id].toString()
             val user = db.collection("users")
                     .document(id)
                     .get().await()

@@ -4,7 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="75dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/layout_contact">
+    android:id="@+id/layout_contact"
+    android:layout_marginTop="8dp"
+    android:layout_marginHorizontal="16dp"
+    android:background="@drawable/chat_rounded_row"
+    android:elevation="12dp"
+    android:outlineSpotShadowColor="@color/purple_700">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/contact_name"
@@ -13,7 +18,7 @@
         android:layout_marginTop="12dp"
         android:fontFamily="sans-serif-medium"
         tools:text="Ashish Patel"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="10dp"
         android:textColor="@color/purple_700"
         android:textSize="20dp"
         app:layout_constraintStart_toEndOf="@+id/display_picture"
@@ -29,7 +34,7 @@
         tools:text="8319520553sdafsfsdfsdfsaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
         android:maxWidth="310dp"
         android:textColor="@color/purple_200"
-        android:textSize="16dp"
+        android:textSize="12dp"
         app:layout_constraintStart_toStartOf="@+id/contact_name"
         app:layout_constraintTop_toBottomOf="@+id/contact_name" />
 
@@ -40,7 +45,7 @@
         android:src="@drawable/ic_contact"
         android:scaleType="centerCrop"
         app:shapeAppearance="@style/circleImageView"
-        android:layout_marginStart="24dp"
+        android:layout_marginStart="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
