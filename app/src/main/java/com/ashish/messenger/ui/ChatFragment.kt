@@ -3,25 +3,21 @@ package com.ashish.messenger.ui
 import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toolbar
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.get
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ashish.messenger.R
 import com.ashish.messenger.adapter.ChatAdapter
-import com.ashish.messenger.data.Conversation
 import com.ashish.messenger.databinding.FragmentChatBinding
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -30,18 +26,15 @@ import com.google.firebase.ktx.Firebase
 import java.util.*
 import com.ashish.messenger.Utils.getCurrentTime
 import com.ashish.messenger.Utils.getTimeId
+import com.ashish.messenger.adapter.MediaAdapter
 import com.ashish.messenger.data.Chat
 import com.ashish.messenger.data.Message
 import com.ashish.messenger.data.MessageList
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
-import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.firestore.FieldValue
+import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -54,12 +47,14 @@ class ChatFragment : Fragment() {
  *  If navigated from Chats Fragment -> Open Chat using the passsed conversation ID.
  * */
     private lateinit var recyclerView: RecyclerView
+    private lateinit var mediaRecyclerView: RecyclerView
     private var contactId: String = ""
     private var conversationId: String? = null
     private lateinit var db: FirebaseFirestore
     private lateinit var navController: NavController
     private lateinit var messageList: MutableList<Message>
     private lateinit var messageSet: MutableSet<String>
+    private lateinit var mediaList: MutableList<String>
     private lateinit var sendBtn : MaterialButton
     private lateinit var messageText : TextInputEditText
     private lateinit var iconSender : String
@@ -77,18 +72,16 @@ class ChatFragment : Fragment() {
 
         navController = findNavController()
         recyclerView = binding.chatRecyclerview
+        mediaRecyclerView = binding.mediaRecyclerview
         sendBtn = binding.sendButton
         messageText = binding.messageEditText
-
-
-
-
 
         messageList = mutableListOf()
         messageSet = mutableSetOf()
 
         db = Firebase.firestore
         val name = arguments?.get("contactName").toString()
+        initMediaRecyclerView()
 
         Log.i(TAG, "onCreateView: Previous Entry : ${navController.previousBackStackEntry?.destination?.id}")
         Log.i(TAG, "onCreateView: Current Entry : ${R.id.chatsFragment}")
@@ -114,17 +107,20 @@ class ChatFragment : Fragment() {
             var galleryIntent = Intent()
             galleryIntent.apply {
                 type = "image/*"
-                putExtra(Intent.EXTRA_ALLOW_MULTIPLE,false)
+                putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true)
                 action = Intent.ACTION_GET_CONTENT
             }
             startActivityForResult(galleryIntent, CHOOSE_IMAGE_CODE)
         }
 
         binding.sendButton.setOnClickListener{
-            if(messageText.text.toString() != "") {
+            if(messageText.text.toString() != "" || mediaList.size!=0)  {
                 if(conversationId!=null) {
-                    sendMessage(messageText.text.toString())
-                    messageText.setText("")
+                    if(messageText.text.toString() != "") {
+                        sendMessage(messageText.text.toString())
+                        messageText.setText("")
+                    }
+                    sendMediaMessage()
                 }else {
                     startNewConversation()
                 }
@@ -235,7 +231,6 @@ class ChatFragment : Fragment() {
                             messageSet.add(message.messageId)
                             recyclerView.adapter?.notifyDataSetChanged()
                             recyclerView.layoutManager?.scrollToPosition(messageList.size-1)
-
                         }
                     }
                 }
@@ -247,8 +242,13 @@ class ChatFragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
         if(resultCode == RESULT_OK) {
             if(data?.clipData == null) {
-                Log.i(TAG, "onActivityResult: Image Uri captured : " + data!!.data.toString())
+                mediaList.add(data!!.data.toString())
+            }else {
+                for(i in 0..data.clipData!!.itemCount) {
+                    mediaList.add(data.clipData!!.getItemAt(i).uri.toString())
+                }
             }
+            mediaRecyclerView.adapter?.notifyDataSetChanged()
         }
     }
 
@@ -265,6 +265,55 @@ class ChatFragment : Fragment() {
             }
 
         Log.i(TAG, "sendMessage: ${iconSender} | $iconRecipient")
+    }
+
+    private fun sendMediaMessage() {
+        for(uri in mediaList) {
+            uploadMedia(Uri.parse(uri))
+        }
+    }
+
+    private fun uploadMedia(uri: Uri) {
+        binding.mediaRecyclerview.isEnabled = false
+        val path = "media/${UUID.randomUUID()}.png"
+        val dpRef = FirebaseStorage.getInstance().reference.child(path)
+        val bmap = MediaStore.Images.Media.getBitmap(requireContext().contentResolver, uri)
+
+        val uploadTask = dpRef.putFile(uri)
+                .addOnSuccessListener {
+                    activity?.let { it1 ->
+                        Snackbar.make(
+                                it1.findViewById<View>(android.R.id.content),
+                                "Uploaded",
+                                Snackbar.LENGTH_SHORT)
+                                .setBackgroundTint(resources.getColor(R.color.teal_200))
+                                .show()
+                    }
+                    dpRef.downloadUrl.addOnCompleteListener{
+                        val downloadUri = it.result.toString()
+                        val uploadedPictureUrl = downloadUri
+                        db.collection("message")
+                                .document(conversationId!!)
+                                .update("messages",FieldValue.arrayUnion(Message(getTimeId(),"", UID!!, getCurrentTime(),null,uploadedPictureUrl.toString())))
+                                .addOnSuccessListener {
+                                    Log.i(TAG, "sendMedia: Added successfully")
+                                    mediaList.clear()
+                                    mediaRecyclerView.adapter?.notifyDataSetChanged()
+                                    binding.mediaRecyclerview.isEnabled = true
+                                }.addOnFailureListener{
+                                    Log.i(TAG, "sendMedia: Failed")
+                                }
+                    }
+                }.addOnFailureListener{
+                    Snackbar.make(
+                            requireActivity().findViewById<View>(android.R.id.content),
+                            "Upload Failed.",
+                            Snackbar.LENGTH_SHORT)
+                            .setBackgroundTint(resources.getColor(R.color.design_default_color_error))
+                            .show()
+                }
+
+
     }
 
     private fun initRecyclerView(mList: MutableList<Message>) {
@@ -286,19 +335,40 @@ class ChatFragment : Fragment() {
         }
     }
 
+    private fun initMediaRecyclerView() {
+        mediaList = mutableListOf()
+        mediaRecyclerView.apply {
+            setHasFixedSize(false)
+            isNestedScrollingEnabled = false
+            layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL,false)
+            adapter = MediaAdapter(mediaList,context.applicationContext)
+        }
+    }
+
     override fun onStop() {
         super.onStop()
         updateRecentMessage()
     }
 
     private fun updateRecentMessage() {
-        db.collection("chats")
-            .document(conversationId!!)
-            .update(mapOf(
-                "recentMessage" to messageList[messageList.size-1].text,
-                "author" to messageList[messageList.size-1].author
-            ))
+        if(messageList[messageList.size-1].text == "" ) {
+            var str = "Sent an Attachment"
+            if(messageList[messageList.size-1].author == UID) str = "You sent an Attachment"
+            db.collection("chats")
+                    .document(conversationId!!)
+                    .update(mapOf(
+                            "recentMessage" to str,
+                            "author" to messageList[messageList.size - 1].author
+                    ))
+        }else {
+            db.collection("chats")
+                    .document(conversationId!!)
+                    .update(mapOf(
+                            "recentMessage" to messageList[messageList.size - 1].text,
+                            "author" to messageList[messageList.size - 1].author
+                    ))
             //.update("recentMessage", messageList[messageList.size-1])
+        }
     }
 
     companion object {
@@ -307,4 +377,5 @@ class ChatFragment : Fragment() {
         val UID = Firebase.auth.uid
 
     }
+
 }

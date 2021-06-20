@@ -1,10 +1,10 @@
 package com.ashish.messenger.data
 
-data class User(val name:String,
-                val phone: String,
-                var profilePictureUrl : String = "",
-                var status : String = "",
-                var dateJoined : String = "",
-                var lastSeen : String = "",
+data class User(val name:String? = null,
+                val phone: String? = null,
+                var profilePictureUrl : String? = null,
+                var status : String? = null,
+                var dateJoined : String? = null,
+                var lastSeen : String? = null,
                 var isOnline : Boolean = false
 )

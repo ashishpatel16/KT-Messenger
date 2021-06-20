@@ -15,14 +15,17 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.*
+import com.ashish.messenger.MyFirebaseMessagingService
 import com.ashish.messenger.R
 import com.ashish.messenger.databinding.ActivityMainBinding
 import com.bumptech.glide.Glide
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.firebase.auth.*
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.FirebaseMessaging
 
 class MainActivity : AppCompatActivity() {
 
@@ -41,6 +44,14 @@ class MainActivity : AppCompatActivity() {
         Log.i(TAG, "onCreate: User : $user")
         navController = this.findNavController(R.id.nav_host_fragment)
 
+        logFcmToken()
+
+        setUpUI()
+
+    }
+
+
+    public fun setUpUI() {
         if(user != null) {
             drawerLayout = binding.drawerLayout
             header = binding.navView.getHeaderView(0)
@@ -49,27 +60,43 @@ class MainActivity : AppCompatActivity() {
             toolbar.visibility = View.VISIBLE
             toolbar.setTitleTextColor(Color.WHITE)
             setSupportActionBar(toolbar)
-            appBarConfiguration =
-                AppBarConfiguration(setOf(R.id.chatsFragment, R.id.contactsFragment), drawerLayout)
+            appBarConfiguration = AppBarConfiguration(setOf(R.id.chatsFragment, R.id.contactsFragment), drawerLayout)
 
             binding.navView.setupWithNavController(navController)
             setupActionBarWithNavController(navController, appBarConfiguration)
 
-            initMenu()
+            setUpShareButton()
 
             listener = NavController.OnDestinationChangedListener { controller, destination, arguments ->
-                    if (destination.id == R.id.loginFragment) {
-                        Log.i(TAG, "onCreate: Logging Out")
-                        controller.graph.startDestination = R.id.loginFragment
-                        Firebase.auth.signOut()
-                    }else if (destination.id == R.id.loginFragment) {
-                        Log.i(TAG, "onCreate: Changing title")
-                        supportActionBar?.title = "Chat"
-                    }
+                if (destination.id == R.id.loginFragment) {
+                    Log.i(TAG, "onCreate: Logging Out")
+                    supportActionBar?.hide()
+                    controller.graph.startDestination = R.id.loginFragment
+                    Firebase.auth.signOut()
+                }else if (destination.id == R.id.loginFragment) {
+
+                    Log.i(TAG, "onCreate: Changing title")
+                    supportActionBar?.title = "Chat"
                 }
+            }
             updateNavHeader()
         }
+    }
 
+    private fun logFcmToken() {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w(MyFirebaseMessagingService.TAG, "Fetching FCM registration token failed", task.exception)
+                return@OnCompleteListener
+            }
+
+            // Get new FCM registration token
+            val token = task.result
+            Log.i(MyFirebaseMessagingService.TAG, "onNewToken: ${token.toString()}")
+
+            // Log and toast
+            // val msg = getString(R.string.msg_token_fmt, token)
+        })
     }
 
     override fun onBackPressed() {
@@ -118,7 +145,7 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp(appBarConfiguration)
     }
 
-    private fun initMenu() {
+    private fun setUpShareButton() {
         val shareMenuItem = binding.navView.menu.findItem(R.id.nav_share)
         shareMenuItem.setOnMenuItemClickListener {
             val shareIntent = Intent(Intent.ACTION_SEND)

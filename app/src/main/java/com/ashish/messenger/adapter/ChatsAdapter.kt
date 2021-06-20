@@ -10,11 +10,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.get
 import androidx.recyclerview.widget.RecyclerView
 import com.ashish.messenger.R
-import com.ashish.messenger.data.Conversation
 import com.ashish.messenger.ui.ChatObject
 import com.bumptech.glide.Glide
 

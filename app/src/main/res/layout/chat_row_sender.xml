@@ -6,39 +6,56 @@
     android:layout_height="wrap_content"
 
     android:padding="8dp"
-    android:layout_marginTop="4dp">
+    >
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/chat_sender_picture"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginRight="4dp"
         android:layout_marginTop="32dp"
+        android:layout_marginRight="4dp"
+        android:background="@drawable/chat_icon_bordered"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:src="@color/purple_700"
-        android:background="@drawable/chat_icon_bordered"
-        app:shapeAppearance="@style/circleImageView" />
+        app:shapeAppearance="@style/circleImageView"
+        tools:src="@color/purple_700" />
+
 
     <TextView
-        android:elevation="6dp"
-        android:shadowColor="@color/purple_700"
         android:id="@+id/chat_sender_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginRight="8dp"
+        android:background="@drawable/message_sender_rounded"
+        android:elevation="6dp"
         android:fontFamily="sans-serif"
         android:maxWidth="300dp"
-        android:textSize="16sp"
-        android:background="@drawable/message_sender_rounded"
-        android:layout_marginRight="8dp"
-        android:textColor="@color/black"
-        android:paddingVertical="12dp"
         android:paddingHorizontal="12dp"
+        android:paddingVertical="12dp"
+        android:shadowColor="@color/purple_700"
+        android:textColor="@color/black"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/chat_sender_picture"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Hey there whatsup my brother bonjour!" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/btn_attachment_sender"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:drawableEnd="@drawable/ic_baseline_open_in_new_24"
+        android:drawablePadding="4dp"
+        android:drawableTint="@color/purple_700"
+        android:gravity="center"
+        android:text="Open"
+        android:textColor="@color/purple_700"
+        android:textSize="14sp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="@+id/chat_sender_text"
+        app:layout_constraintTop_toBottomOf="@+id/chat_sender_text" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

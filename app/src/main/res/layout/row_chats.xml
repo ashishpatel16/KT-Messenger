@@ -7,7 +7,7 @@
     android:paddingVertical="12dp"
     android:id="@+id/layout_chats"
     android:background="@drawable/chat_rounded_row"
-    android:layout_margin="12dp"
+    android:layout_margin="8dp"
     android:elevation="12dp"
     android:outlineSpotShadowColor="@color/purple_700">
 

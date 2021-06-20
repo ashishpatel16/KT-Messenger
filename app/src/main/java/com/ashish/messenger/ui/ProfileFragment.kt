@@ -45,12 +45,6 @@ class ProfileFragment : Fragment() {
         mUser = Firebase.auth.currentUser!!
         mUserId = Firebase.auth.currentUser?.uid.toString()
         reloadData()
-        Snackbar.make(
-                requireActivity().findViewById<View>(android.R.id.content),
-                "Hang on while we fetch your profile, Captain!",
-                Snackbar.LENGTH_SHORT)
-                .setBackgroundTint(resources.getColor(R.color.teal_200))
-                .show()
 
         binding.btnSaveProfile.setOnClickListener{
             val phone = Firebase.auth.currentUser?.phoneNumber.toString()
@@ -79,6 +73,8 @@ class ProfileFragment : Fragment() {
                 PICK_IMAGE)
             binding.btnSaveProfile.isEnabled = false
         }
+
+        (activity as MainActivity).setUpUI()
 
         return  binding.root
     }

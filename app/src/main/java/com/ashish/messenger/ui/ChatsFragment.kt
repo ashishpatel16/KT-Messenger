@@ -47,13 +47,11 @@ class ChatsFragment : Fragment() {
             container,
             false)
         (requireActivity() as AppCompatActivity).supportActionBar?.show()
+
         Log.i(ChatFragment.TAG, "onCreateView: title ${requireActivity().title}")
         mConversationList = mutableListOf()
         set = mutableSetOf()
-        Log.i(TAG, "onCreateView: ${getTimeId()}")
-        Log.i(TAG, "onCreateView: ${getTimeId()}")
-        Log.i(TAG, "onCreateView: ${getTimeId()}")
-        Log.i(TAG, "onCreateView: ${getTimeId()}")
+
 
         // mConversationList.add(ChatObject("Ashish","Hi there!",""))
         recyclerView = binding.chatsRecyclerView

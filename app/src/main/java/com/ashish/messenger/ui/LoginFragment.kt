@@ -35,6 +35,7 @@ class LoginFragment : Fragment() {
     private lateinit var contextView: View
     private lateinit var btn: MaterialButton
     private lateinit var codeInputText: TextInputEditText
+    private lateinit var storedVerificationId : String
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         // Primary Initializations
@@ -55,12 +56,12 @@ class LoginFragment : Fragment() {
         }
 
 
-
         binding.btnSubmit.setOnClickListener {
             val phone = binding.editTextPhone.text.toString()
             if (phone.length != 10) {
                 Snackbar.make(contextView, "Invalid Phone Number. Please retry.", Snackbar.LENGTH_SHORT).show()
             }
+            toggleLoadingBehaviour(true)
             codeInputText.visibility = View.VISIBLE
             createAccount("+91$phone")
         }
@@ -101,9 +102,8 @@ class LoginFragment : Fragment() {
                 ) {
                     Log.d(TAG, "onCodeSent:$verificationId")
 
-
                     // No Use as of now
-                    val storedVerificationId = verificationId
+                    storedVerificationId = verificationId
                     val resendToken = token
 
                 }
@@ -113,14 +113,29 @@ class LoginFragment : Fragment() {
                     Snackbar.make(contextView, "Request Timed out. Try again.", Snackbar.LENGTH_LONG)
                             .setBackgroundTint(resources.getColor(R.color.design_default_color_error))
                             .show()
+                    if(binding.editTextCode.text.toString() != "") {
+                        verifyPhoneNumberWithCode(storedVerificationId,binding.editTextCode.text.toString())
+                    }
+
+                    toggleLoadingBehaviour(false)
                 }
             }
+    }
+
+    private fun toggleLoadingBehaviour(isLoading: Boolean) {
+        if(isLoading) {
+            binding.btnSubmit.visibility = View.INVISIBLE
+            binding.spinner.visibility = View.VISIBLE
+        }else {
+            binding.btnSubmit.visibility = View.VISIBLE
+            binding.spinner.visibility = View.INVISIBLE
+        }
     }
 
     private fun createAccount(phoneNumber:String) {
         val options = PhoneAuthOptions.newBuilder(auth)
                 .setPhoneNumber(phoneNumber)       // Phone number to verify
-                .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
+                .setTimeout(30L, TimeUnit.SECONDS) // Timeout and unit
                 .setActivity(requireActivity())                 // Activity (for callback binding)
                 .setCallbacks(callbacks)          // OnVerificationStateChangedCallbacks
                 .build()
@@ -129,6 +144,7 @@ class LoginFragment : Fragment() {
 
     private fun verifyPhoneNumberWithCode(verificationId: String, code: String) {
         val credential = PhoneAuthProvider.getCredential(verificationId, code)
+        signInWithPhoneAuthCredential(credential)
     }
 
     private fun signInWithPhoneAuthCredential(credential: PhoneAuthCredential) {

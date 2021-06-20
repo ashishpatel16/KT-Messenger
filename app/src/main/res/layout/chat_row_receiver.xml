@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:padding="8dp"
-    android:layout_marginTop="4dp">
+    >
 
 
     <com.google.android.material.imageview.ShapeableImageView
@@ -38,6 +38,24 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/chat_receiver_picture"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Hey there whatsup my brother bonjour!" />
+        tools:text="Sent you an attachment" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_attachment_receiver"
+        android:text="Open"
+        android:textSize="14sp"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/purple_700"
+        android:drawableStart="@drawable/ic_baseline_open_in_new_24"
+        android:drawableTint="@color/purple_700"
+        android:gravity="center"
+        android:drawablePadding="4dp"
+        android:layout_marginEnd="6dp"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="@+id/chat_receiver_text"
+        app:layout_constraintTop_toBottomOf="@+id/chat_receiver_text"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
