@@ -1,6 +1,6 @@
 # KT-Messenger
 
-KT-Messenger is a chat application built using Firebase using ofcourse, the Kotlin Programming language✨
+KT-Messenger is a chat application built using Firebase and ofcourse, the Kotlin Programming language✨
 
 
 ---
